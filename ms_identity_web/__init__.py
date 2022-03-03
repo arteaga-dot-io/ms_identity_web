@@ -256,7 +256,7 @@ class IdentityWebPython(object):
         self._adapter.identity_context_data.state = None
         # reject states that don't match
         if state is None or session_state != state:
-            raise AuthSecurityError("Failed to match request state with session state")
+            raise AuthSecurityError(f"Failed to match request state with session state. Session state: {session_state}. State: {state}")
     
     @require_context_adapter
     def _generate_and_append_nonce_to_context_and_request(self, req_param_dict: dict) -> str:
