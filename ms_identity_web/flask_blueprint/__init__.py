@@ -40,6 +40,8 @@ class FlaskAADEndpoints(Blueprint):
         def aad_redirect():
 #            post_sign_in_url = id_web.id_data.post_sign_in_url or url_for('declared_routes.dashboard')
            # post_sign_in_url = id_web.id_data.post_sign_in_url or url_for('declared_routes.dashboard', azure_auth='true')
+            print("Claims:")
+            print(f"{g.identity_context_data._id_token_claims}"
             post_sign_in_url = id_web.id_data.post_sign_in_url or url_for('declared_routes.login-v2', azure_auth='true', username=g.identity_context_data._id_token_claims['emails'][0])
             logger.debug(f"{name}{endpoints.redirect}: request received. will process params")
             logger.debug(f"{name}{endpoints.redirect}: will redirect to {post_sign_in_url} afterwards")
