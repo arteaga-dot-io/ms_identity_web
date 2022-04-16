@@ -220,7 +220,7 @@ class IdentityWebPython(object):
             if error_code.startswith(str(AADErrorResponse.B2C_FORGOT_PASSWORD_ERROR_CODE)):
                 # it's a b2c password reset error
                 raise B2CPasswordError("B2C password reset request")
-            elif error_code.startsiwth(str(AADErrorResponse.B2C_CANCEL_REQUEST_ERROR_CODE)):
+            elif error_code.startswith(str(AADErrorResponse.B2C_CANCEL_REQUEST_ERROR_CODE)):
                 raise B2CCancelRequestError("B2C cancel action request")
             else:
                 # ??? TODO: add more error types
