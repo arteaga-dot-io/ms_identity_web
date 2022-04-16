@@ -84,6 +84,8 @@ class AADErrorResponse(Enum):
         return str(self.value)
     #AAD B2C forgot password error code, found in description of redirect request:
     B2C_FORGOT_PASSWORD_ERROR_CODE='AADB2C90118'
+    #AAD B2c cancel error code, found in description of redirect request:
+    B2C_CANCEL_REQUEST_ERROR_CODE='AADB2C90091'
     #The parameter under which the error codes are found (in requests to redirect endpoint):
     ERROR_CODE_PARAM_KEY='error_description'
     #The parameter that indicates error:

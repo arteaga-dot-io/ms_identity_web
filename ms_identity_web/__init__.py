@@ -94,6 +94,13 @@ class IdentityWebPython(object):
             return self._client_factory(b2c_policy=b2c_policy).get_authorization_request_url(**auth_req_options)
 
         return self._client_factory().get_authorization_request_url(**auth_req_options)
+    
+    @require_context_adapter
+    def get_cancel_url(self):
+        auth_req_options = self.aad_config.auth_request.__dict__.copy()
+        homepg = auth_req_options['homepg_uri']
+        print(f"ms_identity_web __init.py line 102::Homepage URI: {homepg}")
+        return homepg
 
     @require_context_adapter
     def process_auth_redirect(self, redirect_uri: str = None, response_type: str = None, afterwards_go_to_url: str = None) -> Any:
@@ -135,6 +142,11 @@ class IdentityWebPython(object):
             pw_reset_url = self.get_auth_url(redirect_uri=redirect_uri, b2c_policy = self.aad_config.b2c.password)
             return self._adapter.redirect_to_absolute_url(pw_reset_url)
             # don't raise
+        except B2CCancelRequestError as b2ccre:
+            self.remove_user()
+            self._logger.error(f"process_auth_redirect: b2c cancel {b2ccre.args}")
+            homepg_url = self.get_cancel_url()
+            return homepg_url
         except TokenExchangeError as ter:
             self.remove_user()
             self._logger.error(f"process_auth_redirect: token xchange {ter.args}")
@@ -208,6 +220,8 @@ class IdentityWebPython(object):
             if error_code.startswith(str(AADErrorResponse.B2C_FORGOT_PASSWORD_ERROR_CODE)):
                 # it's a b2c password reset error
                 raise B2CPasswordError("B2C password reset request")
+            elif error_code.startsiwth(str(AADErrorResponse.B2C_CANCEL_REQUEST_ERROR_CODE)):
+                raise B2CCancelRequestError("B2C cancel action request")
             else:
                 # ??? TODO: add more error types
                 raise OtherAuthError("Unknown error while parsing redirect")

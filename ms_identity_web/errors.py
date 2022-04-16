@@ -21,6 +21,10 @@ class B2CPasswordError(AuthError):
     code = 300
     status = 300
     description = "password reset/redirect"
+class B2CCancelRequestError(AuthError):
+    code = 300
+    status = 300
+    description = "cancel request/redirect"
 
 try:
     from werkzeug.exceptions import HTTPException
